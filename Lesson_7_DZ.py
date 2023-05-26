@@ -1,4 +1,7 @@
-﻿import telebot
+﻿# Задача 3. Добавьте в telegram-бота игру «Угадай числа». Бот загадывает число от 1 до 1000.
+# Когда игрок угадывает его, бот выводит количество сделанных ходов.
+
+import telebot
 import requests
 
 myFirstBot = telebot.TeleBot("6154888943:AAHkZBEyCJKP_KgzDyvB7PBIJoFgfKHXCJk")
