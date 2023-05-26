@@ -4,7 +4,7 @@
 import telebot
 import requests
 
-myFirstBot = telebot.TeleBot("6154888943:AAHkZBEyCJKP_KgzDyvB7PBIJoFgfKHXCJk")
+myFirstBot = telebot.TeleBot("TOKEN")
 
 bots_numbres: dict = {}
 players_attempts: dict = {}
