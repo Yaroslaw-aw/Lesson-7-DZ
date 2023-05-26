@@ -23,7 +23,6 @@ def send_welcome(message):
 @myFirstBot.message_handler(content_types=['text'])
 def greetings(message):
 
-    global x, count
     user_id = message.from_user.id
     user_name = message.from_user.first_name
     text: str = message.text.lower()
