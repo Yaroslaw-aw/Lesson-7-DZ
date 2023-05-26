@@ -1,74 +1,24 @@
-﻿# Задача 3. Добавьте в telegram-бота игру «Угадай числа». Бот загадывает число от 1 до 1000.
-# Когда игрок угадывает его, бот выводит количество сделанных ходов.
+﻿# Задача 1. Создайте пользовательский аналог метода map().
 
-import telebot
-import requests
+def my_map(func, iterable):
+    return [func(item) for item in iterable]
 
-myFirstBot = telebot.TeleBot("6154888943:AAHkZBEyCJKP_KgzDyvB7PBIJoFgfKHXCJk")
+# Задача 2. Создайте декоратор, повторяющий функцию заданное количество раз.
+# Эту задачу честно стырил у Антона, т.к. хочу успеть вовремя сдать всю домашку
+# Но в коде я разобрался
 
-bots_numbres: dict = {}
-players_attempts: dict = {}
+from time import time
 
-@myFirstBot.message_handler(commands=['start', 'help'])
-def send_welcome(message):
-    myFirstBot.reply_to(message, 
-                        "Привет, я умею показывать погоду, котиков и играть в игру 'угадай число'." +
-                        "\nЧтобы узнать погоду, напишите слово погода." +
-                        "\nЧтобы посмотреть котика, напишите слово котик." +
-                        "\nЧтобы сыграть в игру, напишите слово игра." +
-                        "\nПриятного время препровождения ;)"
-                        )
+def benchmark(amt):
+    def wrapper1(func):
+        def wrapper2(*args, **kwargs):
+            total = 0
+            for i in range(amt):
+                start_time = time()
+                func(*args, **kwargs)
+                total += time() - start_time
+            average_time = total / amt
+            print(f"среднее время выполнения функции = {average_time}\nкол-во тестов = {amt}")
+        return wrapper2
+    return wrapper1
 
-
-@myFirstBot.message_handler(content_types=['text'])
-def greetings(message):
-
-    global x, count
-    user_id = message.from_user.id
-    user_name = message.from_user.first_name
-    text: str = message.text.lower()
-
-    if 'привет' in text:
-        myFirstBot.reply_to(message, f'Привет, {user_name}!')
-
-    elif 'погода' in text:
-        req = requests.get('https://wttr.in/?0T')
-        myFirstBot.reply_to(message, req.text)
-
-    elif 'котик' in text:
-        req = requests.get('https://cataas.com/cat')
-        myFirstBot.send_photo(user_id, req.content)
-
-    elif 'игра' in text:
-        import random
-        bots_numbres[user_id] = random.randint(1, 1000)
-        players_attempts[user_id] = 0
-        myFirstBot.reply_to(message, f'Я загадал случайное число от 1 до 1000.\n' + 
-                            "Угадайте, какое?")
-
-    else:
-        if text.isdigit():
-
-            attempt = int(message.text)
-
-            if attempt == bots_numbres[user_id]:
-                players_attempts[user_id] += 1
-                myFirstBot.reply_to(message, f'Поздравляю, вы угадали!\nC {players_attempts[user_id]} попытки!')
-                del players_attempts[user_id]
-                del bots_numbres[user_id]
-                print(players_attempts)
-
-            elif attempt > bots_numbres[user_id]:
-                players_attempts[user_id] += 1
-                myFirstBot.reply_to(message, f'Загаданное число меньше')
-                return players_attempts[user_id]
-
-            elif attempt < bots_numbres[user_id]:
-                players_attempts[user_id] += 1
-                myFirstBot.reply_to(message, f'Загаданное число больше')
-                return players_attempts[user_id]
-
-        else:
-            myFirstBot.reply_to(message, f'Вы ввели неверное число или неизвестную мне команду, попробуйте ещё раз.')
-
-myFirstBot.polling()
